@@ -1,64 +1,44 @@
+import tkinter as tk
 
-def main():
-    running = True
-
-    while running:
-        #Choose an option from the menu
-        print("\n === Menu ===")
-        print("1. Add Task")
-        print("2. Delete Task")
-        print("3. View Tasks")
-        print("4. Exit")
-
-        choice = input("Choose an option: ")
-
-        if choice == '1':
-            inp = input("Enter task to add: ")
-            add_task()
-        elif choice == '2':
-            inp = input("Enter task to delete: ")
-            del_task()
-        elif choice == '3':
-            view_tasks()
-        elif choice == '4':
-            print("Goodbye!")
-            running = False
-        else:
-            print("Invalid choice!")
-
-inp = input("input")
-db = {"task1", "task2"}
-
+# Define all functions BEFORE calling them
 def add_task():
-    db.add(inp)
+    if inp.get():  # Get value from input widget
+        db.add(inp.get())
+        inp.delete(0, tk.END)  # Clear input field
+        view_tasks()
 
 def del_task():
-    db.remove(inp)
+    if inp.get():
+        db.discard(inp.get())  # Use discard to avoid KeyError
+        inp.delete(0, tk.END)
+        view_tasks()
 
 def view_tasks():
+    task_list.delete(0, tk.END)
     for task in db:
-        print(task)
+        task_list.insert(tk.END, task)
 
-if __name__ == "__main__":
-    main()
+def button_clicked():
+    print("Button clicked!")
 
-#TODO: Implement the functions above
+# Initialize data
+db = {"task1", "task2"}
+root = tk.Tk()
+root.title("To-Do List")
 
-#while running:
-#    print("\n=== Menu ===")
-#    print("1. Do something")
-#    print("2. Do something else")
-#    print("3. Exit")
-#    
-#    choice = input("Choose an option: ")
-#    
-#    if choice == '1':
-#        print("Doing something...")
-#    elif choice == '2':
-#        print("Doing something else...")
-#    elif choice == '3':
-#        print("Goodbye!")
-#        running = False
-#    else:
-#        print("Invalid choice!")
+# Create GUI elements
+inp = tk.Entry(root, width=30)
+inp.pack(pady=5)
 
+# Buttons call the functions (without parentheses - just reference the function)
+add_button = tk.Button(root, text="Add Task", command=add_task)
+add_button.pack(pady=5)
+
+del_button = tk.Button(root, text="Delete Task", command=del_task)
+del_button.pack(pady=5)
+
+task_list = tk.Listbox(root)
+task_list.pack(pady=5)
+
+view_tasks()  # Display initial tasks
+root.mainloop()
